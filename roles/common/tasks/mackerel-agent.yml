@@ -1,0 +1,33 @@
+- name: check mackerel-agent exists
+  stat: path=/usr/local/mackerel-agent/mackerel-agent
+  register: m
+  tags: mackerel-agent
+
+- name: download mackerel-agent
+  unarchive:
+    src: https://github.com/mackerelio/mackerel-agent/releases/download/v0.30.4/mackerel-agent_linux_arm.tar.gz
+    dest: /tmp
+    copy: no
+  when: m.stat.isreg is not defined or mackerel_force_current_version
+  tags: mackerel-agent
+
+- name: move mackerel-agent
+  synchronize:
+    src: /tmp/mackerel-agent_linux_arm/
+    dest: /usr/local/mackerel-agent
+  delegate_to: "{{ inventory_hostname }}"
+  when: m.stat.isreg is not defined or mackerel_force_current_version
+  tags: mackerel-agent
+
+- name: configure mackerel-agent
+  template: src=templates/mackerel-agent.conf dest=/usr/local/mackerel-agent/mackerel-agent.conf
+  when: m.stat.isreg is not defined or mackerel_force_current_version
+  tags: mackerel-agent
+
+- name: setup mackerel-agent service
+  copy: src=files/mackerel-agent.service dest=/etc/systemd/system/mackerel-agent.service
+  tags: mackerel-agent
+
+- name: enable mackerel-agent service
+  service: name=mackerel-agent enabled=yes state=started
+  tags: mackerel-agent

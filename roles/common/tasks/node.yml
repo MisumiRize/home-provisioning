@@ -1,0 +1,33 @@
+- name: clone nvm
+  git: repo=https://github.com/creationix/nvm.git dest=/usr/local/nvm version=v0.31.1
+  tags: nvm
+
+- name: setup nvm
+  copy: src=files/bash.bashrc dest=/etc/bash.bashrc
+  tags: nvm
+
+- name: install node shim
+  copy: src=files/node dest=/usr/local/bin/node mode=0755
+  tags: nvm
+
+- name: install npm shim
+  copy: src=files/npm dest=/usr/local/bin/npm mode=0755
+  tags: nvm
+
+- name: "download node v{{ node_version }}"
+  unarchive:
+    src: "https://nodejs.org/dist/v{{ node_version }}/node-v{{ node_version }}-linux-armv7l.tar.xz"
+    dest: /tmp
+    copy: no
+  tags: node
+
+- name: move node
+  synchronize:
+    src: "/tmp/node-v{{ node_version }}-linux-armv7l/"
+    dest: "/usr/local/nvm/versions/node/v{{ node_version }}"
+  delegate_to: "{{ inventory_hostname }}"
+  tags: node
+
+- name: "set node v{{ node_version }} as default"
+  command: "echo {{ node_version }} > /usr/local/nvm/alias/default"
+  tags: node

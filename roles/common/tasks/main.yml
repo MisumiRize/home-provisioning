@@ -1,0 +1,3 @@
+- include: mackerel-agent.yml
+
+- include: node.yml
