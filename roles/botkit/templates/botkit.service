@@ -1,0 +1,17 @@
+[Unit]
+Description=Botkit
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/slack-amazon-bot
+User=pi
+
+Restart=always
+RestartSec=10
+
+ExecStart=/bin/bash -c "npm run start"
+
+[Install]
+WantedBy=multi-user.target

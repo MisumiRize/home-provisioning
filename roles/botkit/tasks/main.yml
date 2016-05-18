@@ -1,0 +1,7 @@
+- name: configure botkit service
+  template: src=templates/botkit.service dest=/etc/systemd/system/botkit.service
+  tags: botkit
+
+- name: enable botkit service
+  service: name=botkit enabled=yes
+  tags: botkit
