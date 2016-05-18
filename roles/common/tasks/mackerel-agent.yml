@@ -3,9 +3,19 @@
   register: m
   tags: mackerel-agent
 
-- name: download mackerel-agent
+- name: fetch releases of mackerel-agent
+  uri: url=https://api.github.com/repos/mackerelio/mackerel-agent/releases return_content=yes
+  register: res
+  when: m.stat.isreg is not defined or mackerel_force_current_version
+  tags: mackerel-agent
+
+- set_fact: tag_name={{ res['json'][0]['tag_name'] }}
+  when: m.stat.isreg is not defined or mackerel_force_current_version
+  tags: mackerel-agent
+
+- name: "download mackerel-agent {{ tag_name }}"
   unarchive:
-    src: https://github.com/mackerelio/mackerel-agent/releases/download/v0.30.4/mackerel-agent_linux_arm.tar.gz
+    src: "https://github.com/mackerelio/mackerel-agent/releases/download/{{ tag_name }}/mackerel-agent_linux_arm.tar.gz"
     dest: /tmp
     copy: no
   when: m.stat.isreg is not defined or mackerel_force_current_version
@@ -24,7 +34,7 @@
   when: m.stat.isreg is not defined or mackerel_force_current_version
   tags: mackerel-agent
 
-- name: setup mackerel-agent service
+- name: configure mackerel-agent service
   copy: src=files/mackerel-agent.service dest=/etc/systemd/system/mackerel-agent.service
   tags: mackerel-agent
 
