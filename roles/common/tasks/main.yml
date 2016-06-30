@@ -1,7 +1,15 @@
 - name: configure sshd
   copy: src=files/sshd_config dest=/etc/ssh/sshd_config
   notify: restart sshd service
+  tags: sshd
 
-- include: mackerel-agent.yml
+- name: detect architecture
+  shell: uname -m
+  register: arch
+  failed_when: arch.rc != 0
 
-- include: node.yml
+- include: mackerel-agent_apt.yml
+  when: arch.stdout != 'arm'
+
+- include: mackerel-agent_arm.yml
+  when: arch.stdout == 'arm'

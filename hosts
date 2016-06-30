@@ -1,1 +1,5 @@
+[raspberrypi]
 raspberrypi.local ansible_ssh_user=pi
+
+[docker]
+docker001.local ansible_ssh_user=rize

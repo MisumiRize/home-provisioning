@@ -2,4 +2,8 @@
   become: yes
   roles:
     - common
-    - botkit
+
+- hosts: raspberrypi
+  become: yes
+  roles:
+    - node

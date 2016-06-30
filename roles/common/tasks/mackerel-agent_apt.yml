@@ -1,0 +1,19 @@
+- name: register mackarel apt repository
+  copy: src=files/mackerel.list dest=/etc/apt/sources.list.d/mackerel.list
+  tags: mackerel-agent
+
+- name: register mackerel apt key
+  shell: bash -c 'curl -fsS https://mackerel.io/assets/files/GPG-KEY-mackerel | apt-key add -'
+  tags: mackerel-agent
+
+- name: install mackerel-agent
+  apt: name=mackerel-agent update_cache=yes
+  tags: mackerel-agent
+
+- name: configure mackerel-agent
+  replace: dest=/etc/mackerel-agent/mackerel-agent.conf regexp='^# apikey = ""$' replace="apikey = "{{ mackerel_api_key }}""
+  tags: mackerel-agent
+
+- name: enable mackerel-agent service
+  service: name=mackerel-agent enabled=yes state=started
+  tags: mackerel-agent
