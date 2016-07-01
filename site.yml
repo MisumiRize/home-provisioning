@@ -7,3 +7,8 @@
   become: yes
   roles:
     - node
+
+- hosts: docker
+  become: yes
+  roles:
+    - docker

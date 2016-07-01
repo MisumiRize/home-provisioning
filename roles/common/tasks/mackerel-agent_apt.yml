@@ -2,7 +2,7 @@
   copy: src=files/mackerel.list dest=/etc/apt/sources.list.d/mackerel.list
   tags: mackerel-agent
 
-- name: register mackerel apt key
+- name: register mackerel apt repository gpg key
   shell: bash -c 'curl -fsS https://mackerel.io/assets/files/GPG-KEY-mackerel | apt-key add -'
   tags: mackerel-agent
 
