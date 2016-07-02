@@ -10,6 +10,11 @@
   apt: name=docker-engine update_cache=yes
   tags: docker
 
+- name: configure docker service
+  copy: src=files/docker.service dest=/lib/systemd/system/docker.service
+  notify: restart docker service
+  tags: docker
+
 - name: enable docker service
   service: name=docker enabled=yes state=started
   tags: docker
