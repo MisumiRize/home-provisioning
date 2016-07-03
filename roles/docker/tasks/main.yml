@@ -18,3 +18,15 @@
 - name: enable docker service
   service: name=docker enabled=yes state=started
   tags: docker
+
+- name: install pip
+  package: name=python-pip
+  tags: datadog
+
+- name: install docker-py
+  pip: name=docker-py
+  tags: datadog
+
+- name: pull dd-agent docker image
+  docker_image: name=datadog/docker-dd-agent
+  tags: datadog
