@@ -1,0 +1,3 @@
+- name: install fswebcam
+  apt: name=fswebcam
+  tags: raspberrypi-apt
