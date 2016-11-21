@@ -3,6 +3,10 @@
   notify: restart sshd service
   tags: sshd
 
+- name: install screen
+  apt: name=screen update_cache=yes
+  tags: apt
+
 - name: detect architecture
   shell: uname -m
   register: arch
